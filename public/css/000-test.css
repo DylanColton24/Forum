@@ -1,0 +1,37 @@
+html, body {
+	background	: #FFFFFF;
+}
+
+div, span, p, h1, h2, h3, h4, h5, h6, label, form, input {
+}
+
+/* Header */
+#header {
+	background	: #77AA00;
+}
+
+#head-img-title {
+	background	: #AA0077;
+}
+
+#head-img {
+	background	: #00AA77;
+}
+
+#head-title {
+	background	: #7700AA;
+}
+
+#login-and-search {
+	background	: #0077AA;
+}
+
+/* Footer */
+#footer {
+	background	: #003388;
+}
+
+/* Content */
+#content-wrap {
+	background	: #009944;
+}

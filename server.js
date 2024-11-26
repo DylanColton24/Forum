@@ -1,15 +1,19 @@
 const bodyParser	= require("body-parser");
 const express		= require("express");
 const mongodb		= require("mongodb");
+const dotenv		= require("dotenv");
+const path			= require("path");
 const ejs			= require("ejs");
 const fs			= require("fs");
 
+dotenv.config();
+
 // Port
-const port = 3000;
+const port = (process.env.TEST ? process.env.TEST_PORT : process.env.PORT);
 
 // MongoDB
-const mongUrl	= 'localhost';
-const mongPort	= '27017';
+const mongUrl	= process.env.MONGO_URL || 'localhost';
+const mongPort	= process.env.MONGO_PORT || '27017';
 const uri		= `mongodb://${mongUrl}:${mongPort}/`;
 const dbName	= 'test';
 let db;
@@ -28,7 +32,7 @@ var app = express();
 app.set("view engine", "ejs");
 app.set("views", "views/");
 app.use(express.json());
-app.use(express.static(__dirname + "/public"));
+app.use(express.static(path.join(__dirname + "/public")));
 
 let gen = {
 	"charset"       : "UTF-8",
@@ -59,13 +63,13 @@ app.get("/", (req, res) => {
 // Fallback
 app.all("*/:ex", (req, res) => {
 	try {
-		let url = req.params.ex.toString();
 		// The views/partials/pages needs changed to something else when I figure out how I'm storing forum threads
+		const url = path.normalize(req.params.ex).replace(/^(\.\.(\/|\\|$))/, '');
 		fs.access(__dirname + `views/partials/pages/${url}.ejs`, fs.constants.F_OK, (err) => {
 			if (err) {
 				res.status(404).render("404.ejs", Object.assign({}, gen, {title: "404 - Not Found", err:`Could not find ${url}`}));
 			} else {
-				res.status(200).render("index.ejs", Object.assign({}, gen, require(`./page_data/${url}`)));
+				res.status(200).render("index.ejs", Object.assign({}, gen, {}));
 			}
 		});
 	} catch (err) {
